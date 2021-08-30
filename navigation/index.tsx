@@ -146,11 +146,11 @@ function RootNavigator() {
         component={ChatRoomScreen}
         options={{ headerTitle: ChatRoomHeader, headerBackTitleVisible: false }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="NotFound"
         component={NotFoundScreen}
         options={{ title: "Oops!" }}
-      />
+      /> */}
     </Stack.Navigator>
   );
 }
