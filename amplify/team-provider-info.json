@@ -18,7 +18,7 @@
       "function": {
         "reactNativeMessengerPostConfirmation": {
           "deploymentBucketName": "amplify-reactnativemessenger-staging-15654-deployment",
-          "s3Key": "amplify-builds/reactNativeMessengerPostConfirmation-4f6b382f736d37443465-build.zip"
+          "s3Key": "amplify-builds/reactNativeMessengerPostConfirmation-49484773433964677a76-build.zip"
         }
       }
     }
