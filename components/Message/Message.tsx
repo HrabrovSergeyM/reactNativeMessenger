@@ -1,12 +1,33 @@
+import { Auth, DataStore } from "aws-amplify";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { useEffect } from "react";
+import { useState } from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { User } from "../../src/models";
 
 const Message = ({ message }) => {
+  const [user, setUser] = useState<User | undefined>();
+  const [isMe, setIsMe] = useState<boolean>(false);
+
+  useEffect(() => {
+    DataStore.query(User, message.userID).then(setUser);
+  }, []);
+  useEffect(() => {
+    const checkIfMe = async () => {
+      if (!user) {
+        return;
+      }
+      const authUser = await Auth.currentAuthenticatedUser();
+      setIsMe(user.id == authUser.attributes.sub);
+    };
+    checkIfMe();
+  }, [user]);
+
   const myID = "u1";
 
-  const isNotMeColor = "#3872E9";
-  const isMeColor = "lightgrey";
-  const isMe = message.user.id === myID;
+  if (!user) {
+    return <ActivityIndicator />;
+  }
 
   return (
     <View
