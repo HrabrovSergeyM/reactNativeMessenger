@@ -4,7 +4,7 @@ import { View, Image, Text, Pressable } from "react-native";
 import styles from "./styles";
 
 export default function ChatRoomItem({ chatRoom }) {
-  const user = chatRoom.users[1];
+  const user = null
 
   const navigation = useNavigation();
 
