@@ -11,7 +11,7 @@ import { Auth, DataStore } from "aws-amplify";
 import ChatRoomItem from "../components/ChatRoomItem";
 import chatRoomsData from "../assets/dummy-data/ChatRooms";
 import { useState } from "react";
-import { ChatRoom } from "../src/models";
+import { ChatRoom, ChatRoomUser } from "../src/models";
 import { useEffect } from "react";
 
 export default function HomeScreen() {
@@ -19,8 +19,14 @@ export default function HomeScreen() {
 
   useEffect(() => {
     const fetchChatRooms = async () => {
-      const chatRooms = await DataStore.query(ChatRoom);
-      console.log(chatRooms);
+      const userData = await Auth.currentAuthenticatedUser();
+
+      const chatRooms = (await DataStore.query(ChatRoomUser))
+        .filter(
+          (chatRoomUser) => chatRoomUser.user.id === userData.attributes.sub
+        )
+        .map((chatRoomUser) => chatRoomUser.chatroom);
+
       setChatRooms(chatRooms);
     };
     fetchChatRooms();
