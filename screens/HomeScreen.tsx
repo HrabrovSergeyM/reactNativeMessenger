@@ -7,11 +7,24 @@ import {
   FlatList,
   Pressable,
 } from "react-native";
-import { Auth } from "aws-amplify";
+import { Auth, DataStore } from "aws-amplify";
 import ChatRoomItem from "../components/ChatRoomItem";
 import chatRoomsData from "../assets/dummy-data/ChatRooms";
+import { useState } from "react";
+import { ChatRoom } from "../src/models";
+import { useEffect } from "react";
 
 export default function HomeScreen() {
+  const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
+
+  useEffect(() => {
+    const fetchChatRooms = async () => {
+      const chatRooms = await DataStore.query(ChatRoom);
+      console.log(chatRooms);
+      setChatRooms(chatRooms);
+    };
+    fetchChatRooms();
+  }, []);
   const logOut = () => {
     Auth.signOut();
   };
@@ -19,7 +32,7 @@ export default function HomeScreen() {
     <View style={styles.page}>
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={chatRoomsData}
+        data={chatRooms}
         renderItem={({ item }) => <ChatRoomItem chatRoom={item} />}
       />
       <Pressable
