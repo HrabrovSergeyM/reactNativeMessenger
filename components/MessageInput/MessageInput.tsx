@@ -10,12 +10,33 @@ import {
 import { SimpleLineIcons, Ionicons, AntDesign } from "@expo/vector-icons";
 import { useState } from "react";
 import { KeyboardAvoidingView } from "react-native";
+import { Auth, DataStore } from "aws-amplify";
+import { Message } from "../../src/models";
+import { ChatRoom } from "../../src/models";
 
-const MessageInput = () => {
+const MessageInput = ({ chatRoom }) => {
   const [message, setMessage] = useState("");
-  const sendMessage = () => {
+  const sendMessage = async () => {
+    const user = await Auth.currentAuthenticatedUser();
+    const newMessage = await DataStore.save(
+      new Message({
+        content: message,
+        userID: user.attributes.sub,
+        chatroomID: chatRoom.id,
+      })
+    );
+    updateLastMessage(newMessage);
     setMessage("");
   };
+
+  const updateLastMessage = async (newMessage) => {
+    DataStore.save(
+      ChatRoom.copyOf(chatRoom, (updatedChatRoom) => {
+        updatedChatRoom.LastMessage = newMessage;
+      })
+    );
+  };
+
   const onPlusClicked = () => {};
   const onPress = () => {
     if (message) {
