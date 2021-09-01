@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "reactNativeDev",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authreactNativeDev",
+      "Outputs.UserPoolId"
+    ]
+  }
+}
