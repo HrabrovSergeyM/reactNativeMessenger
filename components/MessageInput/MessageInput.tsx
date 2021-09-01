@@ -13,9 +13,12 @@ import { KeyboardAvoidingView } from "react-native";
 import { Auth, DataStore } from "aws-amplify";
 import { Message } from "../../src/models";
 import { ChatRoom } from "../../src/models";
+import EmojiSelector, { Categories } from "react-native-emoji-selector";
 
 const MessageInput = ({ chatRoom }) => {
   const [message, setMessage] = useState("");
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
+
   const sendMessage = async () => {
     const user = await Auth.currentAuthenticatedUser();
     const newMessage = await DataStore.save(
@@ -27,6 +30,7 @@ const MessageInput = ({ chatRoom }) => {
     );
     updateLastMessage(newMessage);
     setMessage("");
+    setIsEmojiPickerOpen(false);
   };
 
   const updateLastMessage = async (newMessage) => {
@@ -47,53 +51,71 @@ const MessageInput = ({ chatRoom }) => {
   };
   return (
     <KeyboardAvoidingView
-      style={styles.root}
+      style={[styles.root, { height: isEmojiPickerOpen ? "50%" : "auto" }]}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={100}
     >
-      <View style={styles.inputContainer}>
-        <SimpleLineIcons
-          name="emotsmile"
-          size={24}
-          color="#595959"
-          style={styles.icon}
-        />
+      <View style={styles.row}>
+        <View style={styles.inputContainer}>
+          <Pressable
+            onPress={() =>
+              setIsEmojiPickerOpen((currentValue) => !currentValue)
+            }
+          >
+            <SimpleLineIcons
+              name="emotsmile"
+              size={24}
+              color="#595959"
+              style={styles.icon}
+            />
+          </Pressable>
 
-        <TextInput
-          style={styles.input}
-          placeholder={"Message..."}
-          value={message}
-          onChangeText={(newMessage) => setMessage(newMessage)}
-        />
+          <TextInput
+            style={styles.input}
+            placeholder={"Message..."}
+            value={message}
+            onChangeText={(newMessage) => setMessage(newMessage)}
+          />
 
-        <Ionicons
-          name="camera-outline"
-          size={24}
-          color="#595959"
-          style={styles.icon}
-        />
-        <SimpleLineIcons
-          name="microphone"
-          size={24}
-          color="#595959"
-          style={styles.icon}
-        />
+          <Ionicons
+            name="camera-outline"
+            size={24}
+            color="#595959"
+            style={styles.icon}
+          />
+          <SimpleLineIcons
+            name="microphone"
+            size={24}
+            color="#595959"
+            style={styles.icon}
+          />
+        </View>
+        <Pressable onPress={onPress} style={styles.buttonContainer}>
+          {message ? (
+            <Ionicons name="send" size={20} color="white" />
+          ) : (
+            <AntDesign name="plus" size={24} color="white" />
+          )}
+        </Pressable>
       </View>
-      <Pressable onPress={onPress} style={styles.buttonContainer}>
-        {message ? (
-          <Ionicons name="send" size={20} color="white" />
-        ) : (
-          <AntDesign name="plus" size={24} color="white" />
-        )}
-      </Pressable>
+      {isEmojiPickerOpen && (
+        <EmojiSelector
+          onEmojiSelected={(emoji) =>
+            setMessage((currentMessage) => currentMessage + emoji)
+          }
+          columns={8}
+        />
+      )}
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
-    flexDirection: "row",
     padding: 10,
+  },
+  row: {
+    flexDirection: "row",
   },
   inputContainer: {
     backgroundColor: "#f2f2f2",
