@@ -1,24 +1,24 @@
 {
   "staging": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-reactnativemessenger-staging-15654-authRole",
-      "UnauthRoleArn": "arn:aws:iam::488714168226:role/amplify-reactnativemessenger-staging-15654-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::488714168226:role/amplify-reactnativemessenger-staging-15654-authRole",
+      "AuthRoleName": "amplify-reactnativedev-staging-225529-authRole",
+      "UnauthRoleArn": "arn:aws:iam::488714168226:role/amplify-reactnativedev-staging-225529-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::488714168226:role/amplify-reactnativedev-staging-225529-authRole",
       "Region": "us-east-2",
-      "DeploymentBucketName": "amplify-reactnativemessenger-staging-15654-deployment",
-      "UnauthRoleName": "amplify-reactnativemessenger-staging-15654-unauthRole",
-      "StackName": "amplify-reactnativemessenger-staging-15654",
-      "StackId": "arn:aws:cloudformation:us-east-2:488714168226:stack/amplify-reactnativemessenger-staging-15654/8d98c9c0-0935-11ec-8f4d-068fd4a78c78",
-      "AmplifyAppId": "d14gzkhwx1a6g3"
+      "DeploymentBucketName": "amplify-reactnativedev-staging-225529-deployment",
+      "UnauthRoleName": "amplify-reactnativedev-staging-225529-unauthRole",
+      "StackName": "amplify-reactnativedev-staging-225529",
+      "StackId": "arn:aws:cloudformation:us-east-2:488714168226:stack/amplify-reactnativedev-staging-225529/89fcb4f0-0aae-11ec-aeee-06cef2be3310",
+      "AmplifyAppId": "djqiyei1lfi4h"
     },
     "categories": {
       "auth": {
-        "reactNativeMessenger": {}
+        "reactNativeDev": {}
       },
       "function": {
-        "reactNativeMessengerPostConfirmation": {
-          "deploymentBucketName": "amplify-reactnativemessenger-staging-15654-deployment",
-          "s3Key": "amplify-builds/reactNativeMessengerPostConfirmation-49484773433964677a76-build.zip"
+        "reactNativeDevPostConfirmation": {
+          "deploymentBucketName": "amplify-reactnativedev-staging-225529-deployment",
+          "s3Key": "amplify-builds/reactNativeDevPostConfirmation-7150724a78774c7a6755-build.zip"
         }
       }
     }
