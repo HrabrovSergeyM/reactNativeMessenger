@@ -15,9 +15,9 @@ export default function UsersScreen() {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
+    console.log(DataStore.query(User));
     DataStore.query(User).then(setUsers);
   }, []);
-
   return (
     <View style={styles.page}>
       <FlatList
