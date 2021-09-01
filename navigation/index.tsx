@@ -21,6 +21,7 @@ import ChatRoomScreen from "../screens/ChatRoomScreen";
 import { RootStackParamList } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import UsersScreen from "../screens/UsersScreen";
+import { ChatRoomHeader } from "./ChatRoomHeader";
 
 export default function Navigation({
   colorScheme,
@@ -87,54 +88,6 @@ const HomeHeader = () => {
   );
 };
 
-const ChatRoomHeader = (props) => {
-  const { width } = useWindowDimensions();
-
-  return (
-    <View
-      style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        width: width - 50,
-        marginLeft: "auto",
-        padding: 10,
-        alignItems: "center",
-        marginRight: 70,
-      }}
-    >
-      <Image
-        source={{
-          uri: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/elon.png",
-        }}
-        style={{ width: 30, height: 30, borderRadius: 30 }}
-      />
-      <Text
-        style={{
-          flex: 1,
-          marginLeft: 10,
-          fontWeight: "bold",
-        }}
-      >
-        {props.children}
-      </Text>
-      <View style={{ flexDirection: "row" }}>
-        <Ionicons
-          name="camera-outline"
-          size={24}
-          color="black"
-          style={{ marginHorizontal: 10 }}
-        />
-        <Feather
-          name="edit-2"
-          size={24}
-          color="black"
-          style={{ marginHorizontal: 10 }}
-        />
-      </View>
-    </View>
-  );
-};
-
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
@@ -148,7 +101,10 @@ function RootNavigator() {
       <Stack.Screen
         name="ChatRoom"
         component={ChatRoomScreen}
-        options={{ headerTitle: ChatRoomHeader, headerBackTitleVisible: false }}
+        options={({ route }) => ({
+          headerTitle: () => <ChatRoomHeader id={route.params?.id} />,
+          headerBackTitleVisible: false,
+        })}
       />
       <Stack.Screen
         name="UsersScreen"
