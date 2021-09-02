@@ -6,7 +6,6 @@ import { Auth, Storage } from "aws-amplify";
 import { S3Image } from "aws-amplify-react-native";
 import { useWindowDimensions } from "react-native";
 import AudioPlayer from "../AudioPlayer";
-import { Platform } from "react-native";
 
 const blue = "#3777f0";
 const grey = "lightgrey";
