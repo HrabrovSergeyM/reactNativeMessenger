@@ -9,13 +9,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import {
   ColorSchemeName,
-  Image,
   Pressable,
   Text,
   useWindowDimensions,
   View,
 } from "react-native";
-import NotFoundScreen from "../screens/NotFoundScreen";
 import HomeScreen from "../screens/HomeScreen";
 import ChatRoomScreen from "../screens/ChatRoomScreen";
 import { RootStackParamList } from "../types";
@@ -35,6 +33,38 @@ export default function Navigation({
     >
       <RootNavigator />
     </NavigationContainer>
+  );
+}
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+function RootNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerTitle: HomeHeader }}
+      />
+      <Stack.Screen
+        name="ChatRoom"
+        component={ChatRoomScreen}
+        options={({ route }) => ({
+          headerTitle: () => <ChatRoomHeader id={route.params?.id} />,
+          headerBackTitleVisible: false,
+        })}
+      />
+      <Stack.Screen
+        name="UsersScreen"
+        component={UsersScreen}
+        options={{ title: "Users" }}
+      />
+      {/* <Stack.Screen
+        name="NotFound"
+        component={NotFoundScreen}
+        options={{ title: "Oops!" }}
+      /> */}
+    </Stack.Navigator>
   );
 }
 
@@ -81,35 +111,3 @@ const HomeHeader = () => {
     </View>
   );
 };
-
-const Stack = createNativeStackNavigator<RootStackParamList>();
-
-function RootNavigator() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ headerTitle: HomeHeader }}
-      />
-      <Stack.Screen
-        name="ChatRoom"
-        component={ChatRoomScreen}
-        options={({ route }) => ({
-          headerTitle: () => <ChatRoomHeader id={route.params?.id} />,
-          headerBackTitleVisible: false,
-        })}
-      />
-      <Stack.Screen
-        name="UsersScreen"
-        component={UsersScreen}
-        options={{ title: "Users" }}
-      />
-      {/* <Stack.Screen
-        name="NotFound"
-        component={NotFoundScreen}
-        options={{ title: "Oops!" }}
-      /> */}
-    </Stack.Navigator>
-  );
-}
