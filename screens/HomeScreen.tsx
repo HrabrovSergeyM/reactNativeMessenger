@@ -1,20 +1,18 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
+
 import {
+  Text,
+  Image,
+  Pressable,
   View,
   StyleSheet,
-  Image,
-  Text,
   FlatList,
-  Pressable,
 } from "react-native";
 import { Auth, DataStore } from "aws-amplify";
-import ChatRoomItem from "../components/ChatRoomItem";
-import chatRoomsData from "../assets/dummy-data/ChatRooms";
-import { useState } from "react";
 import { ChatRoom, ChatRoomUser } from "../src/models";
-import { useEffect } from "react";
+import ChatRoomItem from "../components/ChatRoomItem";
 
-export default function HomeScreen() {
+export default function TabOneScreen() {
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
 
   useEffect(() => {
@@ -31,15 +29,17 @@ export default function HomeScreen() {
     };
     fetchChatRooms();
   }, []);
+
   const logOut = () => {
     Auth.signOut();
   };
+
   return (
     <View style={styles.page}>
       <FlatList
-        showsVerticalScrollIndicator={false}
         data={chatRooms}
         renderItem={({ item }) => <ChatRoomItem chatRoom={item} />}
+        showsVerticalScrollIndicator={false}
       />
       <Pressable
         onPress={logOut}
@@ -59,7 +59,7 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   page: {
-    flex: 1,
     backgroundColor: "white",
+    flex: 1,
   },
 });
