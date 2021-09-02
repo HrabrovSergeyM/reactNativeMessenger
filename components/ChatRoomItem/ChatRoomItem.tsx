@@ -1,30 +1,23 @@
-import { useNavigation } from "@react-navigation/native";
-import { Auth, DataStore } from "aws-amplify";
-import React, { useState } from "react";
-import { useEffect } from "react";
-import { View, Image, Text, Pressable, ActivityIndicator } from "react-native";
-import { ChatRoomUser, Message } from "../../src/models";
-import { User } from "../../src/models";
+import React, { useState, useEffect } from "react";
+import { Text, Image, View, Pressable, ActivityIndicator } from "react-native";
+import { useNavigation } from "@react-navigation/core";
+import { DataStore } from "@aws-amplify/datastore";
+import { ChatRoomUser, User, Message } from "../../src/models";
 import styles from "./styles";
+import Auth from "@aws-amplify/auth";
+import moment from "moment";
 
 export default function ChatRoomItem({ chatRoom }) {
-  //const [users, setUsers] = useState<User[]>([]);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null); // the display user
   const [lastMessage, setLastMessage] = useState<Message | undefined>();
 
   const navigation = useNavigation();
-
-  const onPress = () => {
-    navigation.navigate("ChatRoom", { id: chatRoom.id });
-  };
 
   useEffect(() => {
     const fetchUsers = async () => {
       const fetchedUsers = (await DataStore.query(ChatRoomUser))
         .filter((chatRoomUser) => chatRoomUser.chatroom.id === chatRoom.id)
         .map((chatRoomUser) => chatRoomUser.user);
-
-      // setUsers(fetchedUsers);
 
       const authUser = await Auth.currentAuthenticatedUser();
       setUser(
@@ -43,29 +36,32 @@ export default function ChatRoomItem({ chatRoom }) {
     );
   }, []);
 
+  const onPress = () => {
+    navigation.navigate("ChatRoom", { id: chatRoom.id });
+  };
+
   if (!user) {
     return <ActivityIndicator />;
   }
 
+  const time = moment(lastMessage?.createdAt).from(moment());
+
   return (
     <Pressable onPress={onPress} style={styles.container}>
-      <Image
-        style={styles.image}
-        source={{
-          uri: user.imageUri,
-        }}
-      />
-      {Boolean(chatRoom.newMessages) ? (
+      <Image source={{ uri: user.imageUri }} style={styles.image} />
+
+      {!!chatRoom.newMessages && (
         <View style={styles.badgeContainer}>
           <Text style={styles.badgeText}>{chatRoom.newMessages}</Text>
         </View>
-      ) : null}
+      )}
+
       <View style={styles.rightContainer}>
         <View style={styles.row}>
           <Text style={styles.name}>{user.name}</Text>
-          <Text style={styles.text}>{lastMessage?.createdAt}</Text>
+          <Text style={styles.text}>{time}</Text>
         </View>
-        <Text style={styles.text} numberOfLines={1}>
+        <Text numberOfLines={1} style={styles.text}>
           {lastMessage?.content}
         </Text>
       </View>
