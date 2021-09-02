@@ -1,20 +1,17 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
   StyleSheet,
   FlatList,
+  SafeAreaView,
   ActivityIndicator,
 } from "react-native";
-import Message from "../components/Message";
-import ChatRoomData from "../assets/dummy-data/Chats";
-import MessageInput from "../components/MessageInput";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { useState } from "react";
-import { Message as MessageModel } from "../src/models";
-import { useEffect } from "react";
+import { useRoute, useNavigation } from "@react-navigation/core";
 import { DataStore } from "@aws-amplify/datastore";
-import { ChatRoom } from "../src/models";
+import { ChatRoom, Message as MessageModel } from "../src/models";
+import Message from "../components/Message";
+import MessageInput from "../components/MessageInput";
 import { SortDirection } from "aws-amplify";
 
 export default function ChatRoomScreen() {
@@ -29,9 +26,6 @@ export default function ChatRoomScreen() {
   }, []);
 
   useEffect(() => {
-    if (!chatRoom) {
-      return;
-    }
     fetchMessages();
   }, [chatRoom]);
 
@@ -39,7 +33,7 @@ export default function ChatRoomScreen() {
     const subscription = DataStore.observe(MessageModel).subscribe((msg) => {
       console.log(msg.model, msg.opType, msg.element);
       if (msg.model === MessageModel && msg.opType === "INSERT") {
-        setMessages((existingMessages) => [msg.element, ...existingMessages]);
+        setMessages((existingMessage) => [msg.element, ...existingMessage]);
       }
     });
 
@@ -53,11 +47,10 @@ export default function ChatRoomScreen() {
     }
     const chatRoom = await DataStore.query(ChatRoom, route.params.id);
     if (!chatRoom) {
-      console.error("Could not find ChatRoomId with this ID");
+      console.error("Couldn't find a chat room with this id");
     } else {
       setChatRoom(chatRoom);
     }
-    // const fetchedMessages = await DataStore.query(MessageModel);
   };
 
   const fetchMessages = async () => {
@@ -71,6 +64,7 @@ export default function ChatRoomScreen() {
         sort: (message) => message.createdAt(SortDirection.DESCENDING),
       }
     );
+    console.log(fetchedMessages);
     setMessages(fetchedMessages);
   };
 
@@ -79,20 +73,20 @@ export default function ChatRoomScreen() {
   }
 
   return (
-    <View style={styles.page}>
+    <SafeAreaView style={styles.page}>
       <FlatList
         data={messages}
         renderItem={({ item }) => <Message message={item} />}
         inverted
       />
       <MessageInput chatRoom={chatRoom} />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   page: {
-    flex: 1,
     backgroundColor: "white",
+    flex: 1,
   },
 });
