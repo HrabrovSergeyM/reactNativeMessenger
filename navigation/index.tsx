@@ -52,12 +52,6 @@ const HomeHeader = () => {
         alignItems: "center",
       }}
     >
-      <Image
-        source={{
-          uri: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/elon.png",
-        }}
-        style={{ width: 30, height: 30, borderRadius: 30 }}
-      />
       <Text
         style={{
           flex: 1,
