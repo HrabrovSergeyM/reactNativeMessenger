@@ -146,6 +146,7 @@ const MessageInput = ({ chatRoom }) => {
         image: key,
         userID: user.attributes.sub,
         chatroomID: chatRoom.id,
+        status: "SENT",
       })
     );
 
@@ -167,19 +168,16 @@ const MessageInput = ({ chatRoom }) => {
         playsInSilentModeIOS: true,
       });
 
-      console.log("Starting recording..");
       const { recording } = await Audio.Recording.createAsync(
         Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
       );
       setRecording(recording);
-      console.log("Recording started");
     } catch (err) {
       console.error("Failed to start recording", err);
     }
   }
 
   async function stopRecording() {
-    console.log("Stopping recording..");
     if (!recording) {
       return;
     }
