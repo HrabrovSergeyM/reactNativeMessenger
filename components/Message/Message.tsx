@@ -38,7 +38,7 @@ const Message = (props) => {
 
   useEffect(() => {
     setAsRead();
-  }, [isMe]);
+  }, [isMe, message]);
 
   useEffect(() => {
     if (message.audio) {
@@ -57,9 +57,9 @@ const Message = (props) => {
     checkIfMe();
   }, [user]);
 
-  const setAsRead = () => {
+  const setAsRead = async () => {
     if (isMe === false && message.status !== "READ") {
-      DataStore.save(
+      await DataStore.save(
         MessageModel.copyOf(message, (updated) => (updated.status = "READ"))
       );
     }
