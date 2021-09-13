@@ -3,6 +3,7 @@ import { View, Image, Text, useWindowDimensions } from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { Auth, DataStore } from "aws-amplify";
 import { ChatRoomUser, User } from "../src/models";
+import moment from "moment";
 
 export const ChatRoomHeader = ({ id, children }) => {
   const { width } = useWindowDimensions();
@@ -28,6 +29,19 @@ export const ChatRoomHeader = ({ id, children }) => {
     fetchUsers();
   }, []);
 
+  const getLastOnlineText = () => {
+    if (!user?.lastOnlineAt) {
+      return null;
+    }
+
+    const lastOnlineDiffMS = moment().diff(moment(user.lastOnlineAt));
+    if (lastOnlineDiffMS < 5 * 60 * 1000) {
+      return "online";
+    } else {
+      return `Last seen online ${moment(user.lastOnlineAt).fromNow()}`;
+    }
+  };
+
   return (
     <View
       style={{
@@ -46,15 +60,17 @@ export const ChatRoomHeader = ({ id, children }) => {
         }}
         style={{ width: 30, height: 30, borderRadius: 30 }}
       />
-      <Text
-        style={{
-          flex: 1,
-          marginLeft: 10,
-          fontWeight: "bold",
-        }}
-      >
-        {user?.name}
-      </Text>
+      <View style={{ flex: 1, marginLeft: 10 }}>
+        <Text
+          style={{
+            fontWeight: "bold",
+          }}
+        >
+          {user?.name}
+        </Text>
+        <Text>{getLastOnlineText()}</Text>
+      </View>
+
       <View style={{ flexDirection: "row" }}>
         <Ionicons
           name="camera-outline"
