@@ -67,6 +67,8 @@ export default function ChatRoomScreen() {
     setMessages(fetchedMessages);
   };
 
+  
+
   if (!chatRoom) {
     return <ActivityIndicator />;
   }
@@ -79,6 +81,7 @@ export default function ChatRoomScreen() {
           <Message
             message={item}
             setAsMessageReply={() => setMessageReplyTo(item)}
+            
           />
         )}
         inverted

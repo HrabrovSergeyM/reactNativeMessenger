@@ -1,5 +1,5 @@
-import { useRoute } from "@react-navigation/core";
-import { DataStore } from "aws-amplify";
+import { useRoute } from "@react-navigation/native";
+import { DataStore, Auth } from "aws-amplify";
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Alert } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
@@ -10,6 +10,11 @@ const GroupInfoScreen = () => {
   const [chatRoom, setChatRoom] = useState<ChatRoom | null>(null);
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const route = useRoute();
+
+  useEffect(() => {
+    fetchChatRoom();
+    fetchUsers();
+  }, []);
 
   const fetchChatRoom = async () => {
     if (!route.params?.id) {
@@ -41,7 +46,7 @@ const GroupInfoScreen = () => {
     }
 
     if (user.id === chatRoom?.Admin?.id) {
-      Alert.alert("You are the admin");
+      Alert.alert("You are the admin, you cannot delete yourself");
       return;
     }
 
@@ -68,6 +73,8 @@ const GroupInfoScreen = () => {
       (cru) => cru.chatroom.id === chatRoom.id && cru.user.id === user.id
     );
 
+    console.log(chatRoomUsersToDelete);
+
     if (chatRoomUsersToDelete.length > 0) {
       await DataStore.delete(chatRoomUsersToDelete[0]);
 
@@ -75,15 +82,11 @@ const GroupInfoScreen = () => {
     }
   };
 
-  useEffect(() => {
-    fetchChatRoom();
-    fetchUsers();
-  }, []);
-
   return (
     <View style={styles.root}>
       <Text style={styles.title}>{chatRoom?.name}</Text>
-      <Text style={styles.title}>Users {allUsers.length}</Text>
+
+      <Text style={styles.title}>Users ({allUsers.length})</Text>
       <FlatList
         data={allUsers}
         renderItem={({ item }) => (
