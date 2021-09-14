@@ -7,11 +7,12 @@ import { Feather } from "@expo/vector-icons";
 export default function UserItem({
   user,
   onPress,
+  onLongPress,
   isSelected,
   isAdmin = false,
 }) {
   return (
-    <Pressable onPress={onPress} style={styles.container}>
+    <Pressable onPress={onPress} onLongPress={onLongPress} style={styles.container}>
       <Image source={{ uri: user.imageUri }} style={styles.image} />
 
       <View style={styles.rightContainer}>

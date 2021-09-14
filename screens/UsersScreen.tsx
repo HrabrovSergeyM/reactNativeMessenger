@@ -37,7 +37,7 @@ export default function UsersScreen() {
   const createChatRoom = async (users) => {
     const authUser = await Auth.currentAuthenticatedUser();
     const dbUser = await DataStore.query(User, authUser.attributes.sub);
-    const newChatRoomData = { newMessages: 0, admin: dbUser };
+    const newChatRoomData = { newMessages: 0, Admin: dbUser };
     // Create a chat room
     if (users.length > 1) {
       newChatRoomData.name = `New group`;
