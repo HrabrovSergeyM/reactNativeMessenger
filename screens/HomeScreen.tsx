@@ -14,6 +14,7 @@ import ChatRoomItem from "../components/ChatRoomItem";
 
 export default function TabOneScreen() {
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchChatRooms = async () => {
@@ -30,6 +31,23 @@ export default function TabOneScreen() {
     fetchChatRooms();
   }, []);
 
+  const getData = () => {
+    setIsLoading(true);
+    const fetchChatRooms = async () => {
+      const userData = await Auth.currentAuthenticatedUser();
+
+      const chatRooms = (await DataStore.query(ChatRoomUser))
+        .filter(
+          (chatRoomUser) => chatRoomUser.user.id === userData.attributes.sub
+        )
+        .map((chatRoomUser) => chatRoomUser.chatroom);
+
+      setChatRooms(chatRooms);
+    };
+    fetchChatRooms();
+    setIsLoading(false);
+  };
+
   const logOut = async () => {
     await DataStore.clear();
     Auth.signOut();
@@ -41,6 +59,8 @@ export default function TabOneScreen() {
         data={chatRooms}
         renderItem={({ item }) => <ChatRoomItem chatRoom={item} />}
         showsVerticalScrollIndicator={false}
+        refreshing={isLoading}
+        onRefresh={getData}
       />
       <Pressable
         onPress={logOut}

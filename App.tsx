@@ -11,7 +11,22 @@ import { Message, User } from "./src/models";
 import moment from "moment";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
+import { box } from "tweetnacl";
+import { getRandomBytes } from "expo-random";
+import {  generateKeyPair, encrypt, decrypt } from "./utils/crypto";
+
 Amplify.configure(config);
+
+
+const obj = { hello: "world" };
+const pairA = generateKeyPair();
+const pairB = generateKeyPair();
+
+const sharedA = box.before(pairB.publicKey, pairA.secretKey);
+const encrypted = encrypt(sharedA, obj);
+
+const sharedB = box.before(pairA.publicKey, pairB.secretKey);
+const decrypted = decrypt(sharedB, encrypted);
 
 function App() {
   const isLoadingComplete = useCachedResources();
